@@ -17,6 +17,9 @@ module.exports = {
       }
     }
   },
+  "env": {
+    "browser": true
+  },
   // add your custom rules here
   'rules': {
     // don't require .vue extension when importing
@@ -24,7 +27,8 @@ module.exports = {
       'js': 'never',
       'vue': 'never'
     }],
-    // allow debugger during development
-    'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0
+    'no-console': 'off',
+    'no-shadow': 'off',
+    'no-param-reassign': 'off'
   }
 }
