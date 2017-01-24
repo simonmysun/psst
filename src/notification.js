@@ -16,7 +16,7 @@
  * Author: Tsvetan Tsvetkov (tsekach@gmail.com)
  */
 
-// Modified to be imported
+// Modified by Simonmysun
 
 // "use strict";
 const PERMISSION_DEFAULT = 'default';
@@ -46,7 +46,7 @@ const isSupported = (() => {
       (window.external && window.external.msIsSiteMode() !== undefined)
     );
   } catch (e) {
-    console.log(e);
+    console.log('Failed to detect whether notification is supported. ');
   }
   return isSupported;
 })();
@@ -186,18 +186,28 @@ const createNotification = (title, options) => {
 };
 
 const permissionRequest = () => {
-  if (permissionLevel() === PERMISSION_DEFAULT) {
-    requestPermission(() => {
-      console.log(permissionLevel());
-    });
+  console.log(permissionLevel());
+  try {
+    console.log(`current: ${permissionLevel()}`);
+    if (permissionLevel() === PERMISSION_DEFAULT) {
+      requestPermission(() => {
+        console.log(permissionLevel());
+      });
+    }
+  } catch (e) {
+    console.log('Failed to request permission. ');
   }
 };
 
 const showNotification = (notification) => {
-  createNotification(notification.title, {
-    body: notification.body,
-    icon: notification.icon,
-  });
+  try {
+    createNotification(notification.title, {
+      body: notification.body,
+      icon: notification.icon,
+    });
+  } catch (e) {
+    console.log('Failed to show notification. ');
+  }
 };
 
 export default {

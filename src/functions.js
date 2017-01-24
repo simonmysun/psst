@@ -19,7 +19,7 @@ export const validate = (text) => {
       return true;
     }
   } catch (e) {
-    // console.error(`Invalidated psst: ${text}`);
+    // console.log(`Invalidated psst: ${text}`);
     return false;
   }
   return false;
@@ -72,7 +72,7 @@ export const normalize = (text) => {
     ];
     return JSON.stringify(newPsst);
   } catch (e) {
-    console.error(e);
+    // console.log(`Failed to normalize: ${text}`);
     return text;
   }
 };
