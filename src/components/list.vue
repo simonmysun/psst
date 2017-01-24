@@ -2,7 +2,7 @@
   <div class="list">
     <!-- render notes in a list -->
     <div>
-      <a v-for="psst in pssts" href="#" :class="{ active: activePsst === psst, invalidated: !validate(psst.text) }" @click="setActivePsst(psst)">
+      <a v-for="psst in pssts" href="#" :class="{ active: activePsst === psst, invalidated: !validate(psst.text) }" @click.stop="setActivePsst(psst)">
         <p>
           {{ psst.text }}
         </p>
@@ -18,7 +18,7 @@
    name: 'list',
    computed: {
      pssts() {
-       return this.$store.state.pssts.slice(1);
+       return this.$store.state.pssts;
      },
      activePsst() {
        return this.$store.state.activePsst;

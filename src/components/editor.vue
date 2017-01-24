@@ -1,7 +1,6 @@
 <template>
   <div class="editor">
-    <textarea :value="activePsstText" @input="editPsst">
-    </textarea>
+    <input :value="activePsstText" @input="editPsst">
   </div>
 </template>
 
@@ -16,6 +15,7 @@
    methods: {
      editPsst(e) {
        this.$store.commit('editPsst', {
+         messagesRef: this.$root.$firebaseRefs.pssts,
          value: e.target.value,
        });
      },
@@ -25,5 +25,11 @@
 
 <style scoped>
  .editor {
+   flex: 100;
+   padding: 0 10px 0 0;
+ }
+
+ .editor input {
+   width: 100%;
  }
 </style>

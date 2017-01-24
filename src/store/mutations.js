@@ -1,67 +1,69 @@
 import { validate, iterate, normalize } from './../functions';
 
+
 export const STORAGE_KEY = '__psst';
 
 const readState = {
-  pssts: (() => {
-    let data;
-    try {
-      data = JSON.parse(window.localStorage.getItem(STORAGE_KEY));
-      if (!Array.isArray(data)) {
-        throw new Error('locaStorage brocken');
-      }
-    } catch (e) {
-      console.error(e);
-      return [
-        {
-          text: '[\'new\', -1, [5]]',
-        },
-      ];
-    }
-    return data;
-  })(),
+  pssts: [
+    {
+      text: '["new", -1, [5]]',
+    },
+  ],
   activePsst: {
     text: '',
   },
+  user: {
+    uid: '',
+  },
 };
 
-readState.activePsst = readState.pssts[0];
+readState.activePsst = readState.pssts[readState.pssts.length - 1];
 
 export const state = readState;
+console.log(state);
 
 export const mutations = {
-  addPsst(state) {
-    state.pssts.push({
+  addPsst(state, { messagesRef }) {
+    messagesRef.push({
       text: normalize(state.activePsst.text),
+    }).then(() => {
+      state.activePsst = {
+        text: '["new", -1, [5]]',
+      };
     });
-    state.pssts[0] = {
-      text: '["new", -1, [5]]',
-    };
-    state.activePsst = state.pssts[0];
   },
 
-  removePsst(state, { psst }) {
-    if (state.pssts.length > 1) {
-      state.pssts.splice(state.pssts.indexOf(psst), 1);
+  removePsst(state, { messagesRef, psst }) {
+    if (state.pssts.indexOf(state.activePsst) >= 0) {
+      messagesRef.child(psst['.key']).remove();
     }
-    state.pssts[0] = {
+    state.activePsst = state.pssts.length > 0 ? state.pssts[0] : {
       text: '["new", -1, [5]]',
     };
-    state.activePsst = state.pssts[0];
   },
 
-  donePsst(state, { psst }) {
+  donePsst(state, { messagesRef, psst }) {
     if (validate(psst.text)) {
-      psst = iterate(psst);
+      messagesRef.push(iterate(psst));
     }
   },
 
-  editPsst(state, { value }) {
+  editPsst(state, { messagesRef, value }) {
     state.activePsst.text = value;
+    if (state.activePsst['.key']) {
+      messagesRef.child(`${state.activePsst['.key']}/text`).set(value);
+    }
   },
 
   setActivePsst(state, { psst }) {
     state.activePsst = psst;
   },
 
+  setUser(state, user) {
+    state.user = user;
+  },
+
+  setPsstsRef(state, { main, key, ref }) {
+    main.$bindAsArray(key, ref);
+  },
 };

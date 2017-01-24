@@ -6,6 +6,7 @@ var merge = require('webpack-merge')
 var baseWebpackConfig = require('./webpack.base.conf')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
 var HtmlWebpackPlugin = require('html-webpack-plugin')
+var OfflinePlugin = require('offline-plugin')
 var env = config.build.env
 
 var webpackConfig = merge(baseWebpackConfig, {
@@ -73,6 +74,20 @@ var webpackConfig = merge(baseWebpackConfig, {
     new webpack.optimize.CommonsChunkPlugin({
       name: 'manifest',
       chunks: ['vendor']
+    }),
+    new OfflinePlugin({
+      caches: {
+        main: [
+          'index.html',
+          'sw.js',
+          'appcache/manifest.html',
+          'appcache/manifest.appcache',
+          'static/css/app*.css',
+          'static/js/vendor*.js',
+          'static/js/manifest*.js',
+          'static/js/app*.js',
+        ]
+      }
     })
   ]
 })
