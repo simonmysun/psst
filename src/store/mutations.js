@@ -1,28 +1,26 @@
-import { validate, iterate, normalize } from './../functions';
-
+import { validate, iterate, normalize, notify } from './../functions';
 
 export const STORAGE_KEY = '__psst';
 
-const readState = {
+export const state = {
   pssts: [
     {
       text: '["new", -1, [5]]',
     },
   ],
   activePsst: {
-    text: '',
+    text: '["new", -1, [5]]',
   },
   user: {
     uid: '',
   },
 };
 
-readState.activePsst = readState.pssts[readState.pssts.length - 1];
-
-export const state = readState;
-console.log(state);
-
 export const mutations = {
+  setActivePsst(state, { psst }) {
+    state.activePsst = psst;
+  },
+
   addPsst(state, { messagesRef }) {
     messagesRef.push({
       text: normalize(state.activePsst.text),
@@ -42,12 +40,6 @@ export const mutations = {
     };
   },
 
-  donePsst(state, { messagesRef, psst }) {
-    if (validate(psst.text)) {
-      messagesRef.push(iterate(psst));
-    }
-  },
-
   editPsst(state, { messagesRef, value }) {
     state.activePsst.text = value;
     if (state.activePsst['.key']) {
@@ -55,8 +47,31 @@ export const mutations = {
     }
   },
 
-  setActivePsst(state, { psst }) {
-    state.activePsst = psst;
+  donePsst(state, { messagesRef, psst }) {
+    const newPsst = {
+      text: iterate(psst.text),
+    };
+    notify({
+      title: 'Psst! ',
+      body: `${psst.text} => ${newPsst.text ? newPsst.text : 'Done. '}`,
+      icon: './static/psst.png',
+    });
+    messagesRef.child(`${psst['.key']}/text`).set(`~${psst.text}`);
+    if (newPsst.text) {
+      messagesRef.push(newPsst);
+    }
+  },
+
+  updatePsst(state, { store, messagesRef }) {
+    const now = new Date().getTime();
+    for (const psst of Object.values(state.pssts)) {
+      if (validate(psst.text)) {
+        const data = JSON.parse(psst.text);
+        if (now > data[1] + (data[2][0] * 60 * 1000)) {
+          store.commit('donePsst', { messagesRef, psst });
+        }
+      }
+    }
   },
 
   setUser(state, user) {

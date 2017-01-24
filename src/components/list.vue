@@ -18,7 +18,17 @@
    name: 'list',
    computed: {
      pssts() {
-       return this.$store.state.pssts;
+       return this.$store.state.pssts.sort((a, b) => {
+         if (!validate(a.text)) {
+           return false;
+         }
+         if (!validate(b.text)) {
+           return true;
+         }
+         const x = JSON.parse(a.text);
+         const y = JSON.parse(b.text);
+         return x[1] + (x[2][0] * 60 * 1000) > y[1] + (y[2][0] * 60 * 1000);
+       });
      },
      activePsst() {
        return this.$store.state.activePsst;

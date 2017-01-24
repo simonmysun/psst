@@ -32,6 +32,7 @@ const vm = new Vue({
           key: 'pssts',
           ref: db.ref(`pssts/${user.uid}`),
         });
+        vm.$nextTick(loop); // eslint-disable-line no-use-before-define
         ((dom) => {
           dom.classList.add('remove');
           setTimeout(() => {
@@ -44,3 +45,13 @@ const vm = new Vue({
     });
   },
 });
+
+const loop = () => {
+  vm.$store.commit('updatePsst', {
+    store: vm.$store,
+    messagesRef: vm.$firebaseRefs.pssts,
+  });
+  setTimeout(() => {
+    vm.$nextTick(loop);
+  }, 1000);
+};
