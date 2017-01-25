@@ -27,6 +27,7 @@
     "eslint-plugin-html": "^1.7.0",
     "firebase": "^3.6.6",
     "labella": "^1.1.2",
+    "moment": "^2.17.1",
     "offline-plugin": "^4.5.5",
     "vue": "^2.1.0",
     "vue-router": "^2.1.3",

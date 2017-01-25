@@ -4,10 +4,7 @@
       <app-header></app-header>
       <userinfo></userinfo>
       <div class="app-body">
-        <div class="fast-edit">
-          <editor></editor>
-          <toolbar></toolbar>
-        </div>
+        <editor></editor>
         <timeline></timeline>
         <list></list>
       </div>
@@ -20,7 +17,6 @@
  import appHeader from './components/header';
  import userinfo from './components/userinfo';
  import editor from './components/editor';
- import toolbar from './components/toolbar';
  import timeline from './components/timeline';
  import list from './components/list';
  import appFooter from './components/footer';
@@ -32,7 +28,6 @@
      userinfo,
      editor,
      timeline,
-     toolbar,
      list,
      appFooter,
    },
@@ -139,9 +134,4 @@
    text-decoration: none;
  }
 
- .fast-edit {
-   width: 100%;
-   display: flex;
-   flex-direction: row;
- }
 </style>

@@ -2,7 +2,6 @@ import Vue from 'vue';
 import firebase from 'firebase';
 import offlineRuntime from 'offline-plugin/runtime';
 import VueTouchRipple from 'vue-touch-ripple';
-
 import App from './App';
 import store from './store';
 
@@ -53,5 +52,5 @@ const loop = () => {
   });
   setTimeout(() => {
     vm.$nextTick(loop);
-  }, 1000);
+  }, 5000);
 };

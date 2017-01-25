@@ -65,8 +65,8 @@ export const mutations = {
   updatePsst(state, { store, messagesRef }) {
     const now = new Date().getTime();
     for (const psst of Object.values(state.pssts)) {
-      if (validate(psst.text)) {
-        const data = JSON.parse(psst.text);
+      const data = validate(psst.text);
+      if (data !== null) {
         if (now > data[1] + (data[2][0] * 60 * 1000)) {
           store.commit('donePsst', { messagesRef, psst });
         }

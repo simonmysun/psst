@@ -2,7 +2,9 @@
   <div class="list">
     <!-- render notes in a list -->
     <div>
-      <a v-for="psst in pssts" href="#" :class="{ active: activePsst === psst, invalidated: !validate(psst.text) }" @click.stop="setActivePsst(psst)">
+      <a v-for="(psst, index) in pssts" href="#" :class="{ active: activePsst === psst, invalidated: psst.data === null }" @click.stop="setActivePsst(psst)">
+        <h3 v-if="psst.data === null">Invalid</h3>
+        <h3 v-else>{{ computedTime[index] }}</h3>
         <p>
           {{ psst.text }}
         </p>
@@ -12,33 +14,51 @@
 </template>
 
 <script>
- import { validate } from './../functions'; // eslint-disable-line no-unused-vars
+ import moment from 'moment';
+ import { validate } from './../functions';
 
  export default {
    name: 'list',
+   data() {
+     return {
+       computedTime: {},
+     };
+   },
    computed: {
      pssts() {
-       const result = this.$store.state.pssts.sort((a, b) => {
-         if (!validate(a.text)) {
+       return this.$store.state.pssts.map((x) => {
+         x.data = validate(x.text);
+         return x;
+       }).sort((a, b) => {
+         const x = a.data;
+         const y = b.data;
+         if (x === null) {
            return 1;
          }
-         if (!validate(b.text)) {
+         if (y === null) {
            return -1;
          }
-         const x = JSON.parse(a.text);
-         const y = JSON.parse(b.text);
          return (x[1] + (x[2][0] * 60 * 1000)) - (y[1] + (y[2][0] * 60 * 1000));
        });
-       console.log(result);
-       return result;
      },
      activePsst() {
        return this.$store.state.activePsst;
      },
    },
+   mounted() {
+     this.$root.$nextTick(this.computeTime);
+   },
    methods: {
      setActivePsst(psst) {
        this.$store.commit('setActivePsst', { psst });
+     },
+     computeTime() {
+       this.computedTime = this.pssts.map(item => (
+         item.data === null ? null : moment(item.data[1] + (item.data[2][0] * 60 * 1000)).fromNow()
+       ));
+       setTimeout(() => {
+         this.$root.$nextTick(this.computeTime);
+       }, 100);
      },
      validate,
    },

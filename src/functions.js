@@ -16,13 +16,13 @@ export const validate = (text) => {
         isNumber(data[3]) &&
         isNumber(data[4]) && data[4] > 0
     ) {
-      return true;
+      return data;
     }
   } catch (e) {
     // console.log(`Invalidated psst: ${text}`);
-    return false;
+    return null;
   }
-  return false;
+  return null;
 };
 
 export const iterate = (text) => {
