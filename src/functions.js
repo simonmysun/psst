@@ -43,21 +43,14 @@ export const iterate = (text) => {
     ] : null);
   */
   const data = JSON.parse(text);
-  return data[4] > 1 ? JSON.stringify(data[2].length > 1 ? [
+  const log = data[4] > 1 ? JSON.stringify([
     data[0],
-    data[1] + data[2].pop(),
-    data[2],
+    data[1] + (data[2].length > 1 ? data[2].pop() : data[2][0]),
+    data[2].length > 1 ? data[2] : [data[2][0] * data[3]],
     data[3],
-    data[4] - 1,
-  ] : [
-    data[0],
-    data[1] + data[2][0],
-    [
-      data[2] * data[3],
-    ],
-    data[3],
-    data[4] - 1,
+    data[2].length > 1 ? data[4] : data[4] - 1,
   ]) : null;
+  return log;
 };
 
 export const normalize = (text) => {
