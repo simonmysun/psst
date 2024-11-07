@@ -4,7 +4,7 @@
 
 Renamed from DoIt because of too many duplicated names.
 
-Now running on https://psst.makelove.expert/
+**This project is deprecated.**
 
 This is an application which can provide 'unintelligent' notifications.
 
